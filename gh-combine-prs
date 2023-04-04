@@ -14,6 +14,9 @@ Usage: gh combine-prs --query "QUERY"
 				e.g. --query "author:app/dependabot"
 				to combine Dependabot PRs
 	Optional arguments:
+		--combined-branch-name
+				if set, will set the name of the new combined branch.
+				Default is "intermediate/combined"
 		--selected-pr-numbers COMMA,SEPARATED,LIST
 				if set, will only work on PRs with the selected numbers.
 				e.g. --selected-pr-numbers 42,13,78
@@ -38,6 +41,7 @@ confirm() {
 	done
 }
 
+COMBINED_BRANCH="intermediate/combined"
 LIMIT=50
 QUERY=""
 SKIP_PR_CHECK="false"
@@ -47,6 +51,10 @@ while [ $# -gt 0 ]; do
 	-h|--help)
 		help
 		exit 0
+		;;
+	--combined-branch-name)
+		shift
+		COMBINED_BRANCH=$1
 		;;
 	--selected-pr-numbers)
 		shift
@@ -72,7 +80,6 @@ while [ $# -gt 0 ]; do
 done
 
 DEFAULT_BRANCH=$(gh api /repos/:owner/:repo --jq '.default_branch')
-COMBINED_BRANCH=combined-pr-branch
 BODY_FILE=/tmp/.combined-pr-body.md
 
 if [[ -z "${QUERY}" ]]; then

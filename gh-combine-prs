@@ -157,4 +157,8 @@ echo -e "\n\nFinished merging - press any key to create PR or escape to abort"
 confirm
 
 echo "Creating PR"
-gh pr create --title "Combined dependencies PR" --body-file $BODY_FILE --label dependencies
+gh pr create \
+	--title "Combined dependencies PR" \
+	--body-file $BODY_FILE \
+	--label dependencies \
+	--assignee "@me"
